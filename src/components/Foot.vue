@@ -11,9 +11,3 @@
     name: 'foot'
   }
 </script>
-
-<style scoped>
-  .foot {
-    padding-top: 10px;
-  }
-</style>

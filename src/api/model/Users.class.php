@@ -78,12 +78,12 @@ class Users extends Model
         else {
             $result = pg_fetch_assoc(pg_query($this->connection, "SELECT * FROM users WHERE user_name='$user_name'"));
             $old_password = md5($user_password);
-            $new_password = (isset($new_password) && $new_password !== "" && $new_password !== null) ? md5($new_password) : $old_password;
+            $new_password = (isset($new_password) && $new_password != "" && $new_password != null) ? md5($new_password) : $old_password;
             $update_query =  "UPDATE users
-                              SET user_name='$user_name', user_password='$new_password', 
-                                  user_gender=NULLIF('$user_gender', ''), user_birth=TO_DATE(NULLIF('$user_birth', ''), 'YYYYMMDD'), 
-                                  user_email=NULLIF('$user_email', ''), user_tel=NULLIF('$user_tel', ''), user_intro=NULLIF('$user_intro', '')
-                              WHERE user_name='$user_name'";
+                              SET user_name = '$user_name', user_password = '$new_password', 
+                                  user_gender = NULLIF('$user_gender', ''), user_birth = TO_DATE(NULLIF('$user_birth', ''), 'YYYYMMDD'), 
+                                  user_email = NULLIF('$user_email', ''), user_tel = NULLIF('$user_tel', ''), user_intro = NULLIF('$user_intro', '')
+                              WHERE user_name = '$user_name'";
             if ($old_password === $result["user_password"]) {
                 if (pg_query($this->connection, $update_query)) {
                     $result = pg_fetch_assoc(pg_query($this->connection, "SELECT * FROM users WHERE user_name='$user_name'"));
@@ -107,13 +107,17 @@ class Users extends Model
         $_SESSION["user_is_admin"] = $user_is_admin;
     }
 
+    public function getUserName($user_id)
+    {
+        return pg_fetch_assoc(pg_query($this->connection,"SELECT user_name FROM users WHERE user_id='$user_id'"));
+    }
+
     public function selectAll($user_id)
     {
         if (isset($user_id)) {
-            $result = pg_fetch_assoc(pg_query($this->connection, "SELECT * FROM users WHERE user_id='$user_id'"));
-            return $result ? $result : null;
+            return pg_fetch_assoc(pg_query($this->connection, "SELECT * FROM users WHERE user_id='$user_id'"));
         } else
-            return null;
+            return NULL;
     }
 
 }
